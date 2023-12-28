@@ -1,0 +1,40 @@
+name: push-t-o-EC2
+
+#trigger deployement only on push to main branch
+
+on:
+push:
+branch: 
+- main
+job:
+deplopy:
+name: deploy the ec2 on master branch push
+runs-on: linux/UNIX
+ steps:
+  - name : checkout the files
+  uses: ationx/checkout@v2
+  - name: deploye to server 1
+  uses: easing themes /ssh-deploy@main
+  env:
+  SSH_PRIVATE_KEY: ${{Screts.GIT_KEY}}
+  REMOTE_HOST: ${{Screts.GIT_DNS}}
+  REMOTE_USER: ${{Screts.GIT_OS}}
+  TERGET: ${{Screts.GIT_TAR}}
+  - name: executing remote SSH commands using SSH Key
+
+   uses: appleboy/ssh-action@master
+   with:
+   HOST: ${{Screts.GIT_DNS}}
+   USERNAME: ${{Screts.GIT_OS}}
+   KEY: ${{Screts.GIT_KEY}}
+
+
+   Script: |
+
+   sudo apt-get -y update
+   sudo apt-get install -y apache2
+   sudo systemctl start apache2
+   sudo systemctl enable apache2
+   cd home
+   sudo mv * /var/www/html
+   
